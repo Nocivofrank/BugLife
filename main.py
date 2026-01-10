@@ -11,7 +11,7 @@ running = True
 dt = 0
 
 for i in range(100):
-    bug.Bug(id=i)
+    bug.Bug(id=i, pos= (bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())))
 
 while running:
     for event in py.event.get():
@@ -20,6 +20,7 @@ while running:
     screen.fill("black")
 
     bug.Bug.death()
+    bug.Bug.update_detect(dt)
     bug.Bug.update(dt, screen)
     bug.Bug.draw(screen)
 

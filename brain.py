@@ -3,14 +3,17 @@ import bug as bg
 import secrets
 
 class Brain():    
-    def __init__(self):
+    minimum_neuron_input = 15
+    def __init__(self, neuron_min_limit = 0):
+        self.neuron_input = neuron_min_limit + Brain.minimum_neuron_input
+
         self.hidden_size = [
-            6,
+            self.neuron_input,
             100,
             100,
-            50,
-            10,
-            10,
+            500,
+            100,
+            100,
             5
         ]
 
@@ -25,7 +28,7 @@ class Brain():
 
             self.B.append(np.array([Brain.random_range(-1, 1) for _ in range(out_size)]))
 
-        self.information = np.zeros(self.hidden_size[0])
+        self.information = np.zeros(self.neuron_input)
 
     def getWeights(self):
         return self.W
@@ -56,28 +59,30 @@ class Brain():
 
     def extract_information(self , bug):
         self.information[0] = bug.pos.x
-        amount = 1
-        if amount < self.hidden_size[0]:
-            self.information[amount] = bug.pos.y
-            amount += 1
+        self.information[1] = bug.pos.y
+        self.information[2] = bug.vel.x
+        self.information[3] = bug.vel.y
 
-            for j in range(bg.Bug.amount_detect_max):
-                if amount >= self.hidden_size[0]:
+        amount = self.neuron_input
+
+        for j in range(bg.Bug.amount_detect_max):
+            if bug.closest_other[j] != None:
+                if amount >= self.neuron_input:
                     break
                 self.information[amount] = bug.closest_other[j].pos.x
                 amount += 1
 
-                if amount >= self.hidden_size[0]:
+                if amount >= self.neuron_input:
                     break
                 self.information[amount] = bug.closest_other[j].pos.y
                 amount += 1
 
-                if amount >= self.hidden_size[0]:
+                if amount >= self.neuron_input:
                     break
                 self.information[amount] = bug.closest_other[j].direction.x
                 amount += 1
 
-                if amount >= self.hidden_size[0]:
+                if amount >= self.neuron_input:
                     break
                 self.information[amount] = bug.closest_other[j].direction.y
 

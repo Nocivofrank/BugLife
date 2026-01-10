@@ -2,9 +2,10 @@ import pygame
 import brain as Brain
 
 class Bug():
-    size = 10
+    size = 5
 
-    amount_detect_max = 2
+    amount_detect_max = 20
+    detection_range = 5 * size
 
     bugs = []
 
@@ -22,34 +23,37 @@ class Bug():
         self.brain.brainMutate()
         Bug.bugs.append(self)
 
-    def update(dt, screen):
+    def update_detect(dt):
         for bug in Bug.bugs:
+            bug.closest_other = [None] * Bug.amount_detect_max
             for other_bug in Bug.bugs:
                 if other_bug == bug:
+                    continue
+                
+                if other_bug in bug.closest_other:
                     continue
 
                 distance = bug.pos.distance_to(other_bug.pos)
 
-                # Check if we have an empty slot
-                if None in bug.closest_other:
-                    # Find the first empty slot
-                    empty_index = bug.closest_other.index(None)
-                    bug.closest_other[empty_index] = other_bug
-                else:
-                    # Find the farthest bug currently stored
-                    farthest_index = 0
-                    max_distance = bug.pos.distance_to(bug.closest_other[0].pos)
+                if distance < Bug.detection_range:
+                    if None in bug.closest_other:
+                        empty_index = bug.closest_other.index(None)
+                        bug.closest_other[empty_index] = other_bug
+                    else:
+                        farthest_index = 0
+                        max_distance = bug.pos.distance_to(bug.closest_other[0].pos)
 
-                    for i in range(1, Bug.amount_detect_max):
-                        d = bug.pos.distance_to(bug.closest_other[i].pos)
-                        if d > max_distance:
-                            max_distance = d
-                            farthest_index = i
+                        for i in range(1, Bug.amount_detect_max):
+                            d = bug.pos.distance_to(bug.closest_other[i].pos)
+                            if d > max_distance:
+                                max_distance = d
+                                farthest_index = i
 
-                    # If the new bug is closer than the farthest, replace it
-                    if distance < max_distance:
-                        bug.closest_other[farthest_index] = other_bug
+                        if distance < max_distance:
+                            bug.closest_other[farthest_index] = other_bug
 
+    def update(dt, screen):
+        for bug in Bug.bugs:
             bug.brain.extract_information(bug)
 
             out = bug.brain.brainThink()
@@ -65,27 +69,30 @@ class Bug():
             bug.vel *= 0.85
             bug.pos += bug.vel * dt
 
+            wrap_padding = 4
+
             #wrap around edges
-            if bug.pos.x < -Bug.size:
+            if bug.pos.x  < -Bug.size * wrap_padding:
                 bug.pos.x = screen.get_width() + Bug.size
-            elif bug.pos.x > screen.get_width() + Bug.size:
+            elif bug.pos.x > screen.get_width() + Bug.size * wrap_padding:
                 bug.pos.x = -Bug.size
 
-            if bug.pos.y < -Bug.size:
+            if bug.pos.y < -Bug.size * wrap_padding:
                 bug.pos.y = screen.get_height() + Bug.size
-            elif bug.pos.y > screen.get_height() + Bug.size:
+            elif bug.pos.y > screen.get_height() + Bug.size * wrap_padding:
                 bug.pos.y = -Bug.size
-
-    def draw(screen):
+    
+    def draw(screen, draw_debug = False):
         for bug in Bug.bugs:
             pygame.draw.circle(screen, "red", bug.pos, Bug.size)
-            line_length = 30
+            line_length = 3 * Bug.size
             end_pos = bug.pos + bug.direction * line_length
             pygame.draw.aaline(screen, "yellow", bug.pos, end_pos)
 
-            for i in range(Bug.amount_detect_max):
-                if bug.closest_other[i] != None:
-                    pygame.draw.aaline(screen, "green", bug.pos, bug.closest_other[i].pos)
+            if draw_debug:
+                for i in range(Bug.amount_detect_max):
+                    if bug.closest_other[i] != None:
+                        pygame.draw.aaline(screen, "green", bug.pos, bug.closest_other[i].pos)
 
     def death():
         for bug in Bug.bugs:
