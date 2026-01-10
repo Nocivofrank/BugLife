@@ -3,17 +3,18 @@ import bug as bg
 import secrets
 
 class Brain():    
-    minimum_neuron_input = 15
+    minimum_neuron_input = 4
     def __init__(self, neuron_min_limit = 0):
         self.neuron_input = neuron_min_limit + Brain.minimum_neuron_input
 
         self.hidden_size = [
             self.neuron_input,
-            100,
-            100,
             500,
+            400,
+            300,
+            200,
             100,
-            100,
+            50,
             5
         ]
 

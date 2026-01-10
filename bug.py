@@ -4,7 +4,7 @@ import brain as Brain
 class Bug():
     size = 5
 
-    amount_detect_max = 20
+    amount_detect_max = 10
     detection_range = 5 * size
 
     bugs = []
@@ -13,6 +13,7 @@ class Bug():
         self.pos = pygame.Vector2(pos)
         self.vel = pygame.Vector2(0, 0)
         self.direction = pygame.Vector2(0 , 0)
+
         self.speed = 1000
         self.brain = Brain.Brain()
 
@@ -21,6 +22,8 @@ class Bug():
         self.closest_other = [None] * Bug.amount_detect_max
 
         self.brain.brainMutate()
+        self.id = id
+        self.selected = False
         Bug.bugs.append(self)
 
     def update_detect(dt):
@@ -60,8 +63,9 @@ class Bug():
             bug.direction.x = out[0] - out[1]
             bug.direction.y = out[2] - out[3]
 
-            if out[4] > .85:
-                bug.brain.brainMutate()
+            if out[4] > .5:
+                bug.direction.x = 0
+                bug.direction.y = 0
 
             if bug.direction.length() != 0:
                 bug.direction = bug.direction.normalize()
@@ -84,7 +88,11 @@ class Bug():
     
     def draw(screen, draw_debug = False):
         for bug in Bug.bugs:
-            pygame.draw.circle(screen, "red", bug.pos, Bug.size)
+            if bug.selected:
+                pygame.draw.circle(screen, "green", bug.pos, Bug.size)
+            else:
+                pygame.draw.circle(screen, "red", bug.pos, Bug.size)
+
             line_length = 3 * Bug.size
             end_pos = bug.pos + bug.direction * line_length
             pygame.draw.aaline(screen, "yellow", bug.pos, end_pos)
@@ -98,3 +106,14 @@ class Bug():
         for bug in Bug.bugs:
             if not bug.alive:
                 Bug.bugs.remove(bug)
+
+    def getBug(id, debug = False):
+        for bug in Bug.bugs:
+            bug.selected = False
+        for bug in Bug.bugs:
+            if bug.id == id:
+                if debug:
+                    print("Returning Bug: ", bug , bug.id)
+                bug.selected = True
+                return bug
+        return None

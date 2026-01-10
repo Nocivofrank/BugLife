@@ -1,22 +1,32 @@
 import pygame as py
-import bug
-import os
+import bug, os, threading, menu
 
 os.system("cls ")
+
+lock = threading.Lock()
+
+shared_info = [
+    [True]        #Pygame running bool
+]
+
+def Menu():
+    menu.Menu()
+    shared_info[0] = False
+
+threading.Thread(target=Menu , daemon=True).start()
 
 py.init()
 screen = py.display.set_mode((1280, 720))
 clock = py.time.Clock()
-running = True
 dt = 0
 
-for i in range(100):
+for i in range(10):
     bug.Bug(id=i, pos= (bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())))
 
-while running:
+while shared_info[0]:
     for event in py.event.get():
         if event.type == py.QUIT:
-            running = False
+            shared_info[0] = False
     screen.fill("black")
 
     bug.Bug.death()
