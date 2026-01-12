@@ -73,7 +73,7 @@ class Fruit():
                 chunk = gameChunk.chunk_lists["fruit_chunks"]
                 if fruit.quadrant is not None:
                     if len(chunk[fruit.quadrant]) != 0:
-                        if (brain.Brain.random_range(0 , 1) / len(chunk[fruit.quadrant])) > .999:
+                        if (brain.Brain.random_range(0 , 1) / len(chunk[fruit.quadrant])) > .9999:
                             fruit.alive = False
                             Tree(pos= (fruit.pos.x, fruit.pos.y))
 

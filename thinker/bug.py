@@ -7,7 +7,7 @@ class Bug():
     amount_detect_max = 20
     detection_range = 100 * size
     attack_range = 10 * size**2
-    reproduction_energy_minimum = 1000
+    reproduction_energy_minimum = 2000
 
     bugs = []
 
@@ -23,7 +23,7 @@ class Bug():
         self.eat_cooldown = 1
         self.eat_cooldown_timer = 0
         self.quadrant = None
-        self.grab_fruit = False
+        self.grabed_fruit = False
 
         # Catalogs the nearest bug
         self.closest_other = [None] * Bug.amount_detect_max
@@ -135,9 +135,8 @@ class Bug():
                 if bug.eat_cooldown_timer < bug.eat_cooldown:
                     bug.eat_cooldown_timer += dt
 
-                bug.energy -= bug.speed * 100
-
                 if bug.direction.length_squared() > 0:
+                    bug.energy -= bug.speed * 100
                     bug.direction = bug.direction.normalize()
                     bug.energy -= dt / 100
 
@@ -172,7 +171,7 @@ class Bug():
                 for i in range(4):
                     if wrap is False:
                         if bug.distance_to_sides[i] < 10:
-                            bug.energy -= 10
+                            bug.energy -= 10 * dt
                             bug.edging = True
 
                 bug.time_alive += dt
@@ -226,19 +225,19 @@ class Bug():
                     if out[7] > .5:
                         target_fruit = bug.very_closest_fruit
                         if target_fruit is not None and target_fruit.alive:
-                            bug.grab_fruit = True
+                            bug.grabed_fruit = True
                         else:
-                            bug.grab_fruit = False
+                            bug.grabed_fruit = False
                             
 
                     # REPORUDCE THIGNS HI
-                    if out[8] > .8 and bug.energy >= Bug.reproduction_energy_minimum:
+                    if out[8] > .5 and bug.energy >= Bug.reproduction_energy_minimum:
                         bug.willing_to_reproduce = True
                         target = bug.very_closest_other
 
                         if target is not None:
                             distance = bug.pos.distance_to(target.pos)
-                            if target.willing_to_reproduce and distance <= Bug.attack_range:
+                            if (target.willing_to_reproduce and distance <= Bug.attack_range):
                                 bug.energy -= 500
                                 target.energy -= 500
                                 dx = (bug.pos.x + target.pos.x) / 2
@@ -247,6 +246,8 @@ class Bug():
                                     Bug(len(Bug.bugs), pos= (dx, dy), energy_passed= 500, brain=bug.brain)
                                 else:
                                     Bug(len(Bug.bugs), pos= (dx, dy), energy_passed= 500, brain=target.brain)
+                    else:
+                        bug.willing_to_reproduce = False
                 else:
                     bug.brain_think_cooldown_timer += dt
 
@@ -282,7 +283,7 @@ class Bug():
     def grab_fruit(dt):
         for bug in Bug.bugs:
             if bug.very_closest_fruit_distance < Bug.attack_range:
-                if bug.grab_fruit:
+                if bug.grabed_fruit:
                     if bug.very_closest_fruit_distance > Bug.size:
                         bug.very_closest_fruit.energy = 50000
 
@@ -300,6 +301,7 @@ class Bug():
     def death():
         for bug in Bug.bugs:
             if not bug.alive:
+                print(f"Bug: {bug.id} died, Energy: {bug.energy} , Edging: {bug.edging}")
                 Bug.bugs.remove(bug)
 
     def getBug(id, debug = False):

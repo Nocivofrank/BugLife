@@ -67,6 +67,8 @@ while shared_info["running"]:
         bug.Bug.death()
         food.Fruit.decay()
 
+        print(len(bug.Bug.bugs))
+
         game_Chunk.Update(bug.Bug.bugs, "bug_chunks")
         game_Chunk.Update(food.Fruit.fruits, "fruit_chunks")
         game_Chunk.Update(food.Tree.Trees, "tree_chunks")
@@ -84,7 +86,7 @@ while shared_info["running"]:
         if len(food.Tree.Trees) < amount_trees_create:
             food.Tree(pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())))
         if len(bug.Bug.bugs) < amount_bugs_create / 10:
-            bug.Bug( id = len(bug.Bug.bugs) ,pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())))
+            bug.Bug( id = len(bug.Bug.bugs) ,pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())), energy_passed=1000)
 
     else:
         text = font.render(f"Loading...", True , (255, 255, 255))
