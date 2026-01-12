@@ -301,7 +301,6 @@ class Bug():
     def death():
         for bug in Bug.bugs:
             if not bug.alive:
-                print(bug.energy)
                 Bug.bugs.remove(bug)
 
     def getBug(id, debug = False):
