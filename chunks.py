@@ -14,7 +14,8 @@ class Chunks:
 
         self.chunk_lists = {
             "bug_chunks": [None] * self.chunk_size,
-            "fruit_chunks": [None] * self.chunk_size
+            "fruit_chunks": [None] * self.chunk_size,
+            "tree_chunks":[None] * self.chunk_size,
         }
         
         self.chunk_screen_horizontal_size = self.width / self.chunk_size

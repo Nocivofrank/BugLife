@@ -6,7 +6,7 @@ class Bug():
 
     amount_detect_max = 20
     detection_range = 100 * size
-    attack_range = 10 * size
+    attack_range = 10 * size**2
     reproduction_energy_minimum = 1000
 
     bugs = []
@@ -23,6 +23,7 @@ class Bug():
         self.eat_cooldown = 1
         self.eat_cooldown_timer = 0
         self.quadrant = None
+        self.grab_fruit = False
 
         # Catalogs the nearest bug
         self.closest_other = [None] * Bug.amount_detect_max
@@ -134,11 +135,11 @@ class Bug():
                 if bug.eat_cooldown_timer < bug.eat_cooldown:
                     bug.eat_cooldown_timer += dt
 
-                bug.energy -= bug.speed / 100
+                bug.energy -= bug.speed * 100
 
                 if bug.direction.length_squared() > 0:
                     bug.direction = bug.direction.normalize()
-                    bug.energy -= 0.01
+                    bug.energy -= dt / 100
 
                 bug.vel += bug.direction * bug.speed * dt
                 bug.vel *= 0.85
@@ -222,8 +223,16 @@ class Bug():
                                 bug.eat_cooldown_timer = 0
                                 target_fruit.alive = False
 
+                    if out[7] > .5:
+                        target_fruit = bug.very_closest_fruit
+                        if target_fruit is not None and target_fruit.alive:
+                            bug.grab_fruit = True
+                        else:
+                            bug.grab_fruit = False
+                            
+
                     # REPORUDCE THIGNS HI
-                    if out[6] > .8 and bug.energy >= Bug.reproduction_energy_minimum:
+                    if out[8] > .8 and bug.energy >= Bug.reproduction_energy_minimum:
                         bug.willing_to_reproduce = True
                         target = bug.very_closest_other
 
@@ -252,7 +261,7 @@ class Bug():
             elif bug.edging:
                 pygame.draw.circle(screen, "purple", bug.pos, Bug.size)
             else:
-                pygame.draw.circle(screen, "red", bug.pos, Bug.size)
+                pygame.draw.circle(screen, "blue", bug.pos, Bug.size)
 
             line_length = 3 * Bug.size
             end_pos = bug.pos + bug.direction * line_length
@@ -270,9 +279,29 @@ class Bug():
                         if distance <= Bug.detection_range:
                             pygame.draw.aaline(screen, "red", bug.pos, bug.closest_fruit[i].pos)
 
+    def grab_fruit(dt):
+        for bug in Bug.bugs:
+            if bug.very_closest_fruit_distance < Bug.attack_range:
+                if bug.grab_fruit:
+                    if bug.very_closest_fruit_distance > Bug.size:
+                        bug.very_closest_fruit.energy = 50000
+
+                        fruit = bug.very_closest_fruit
+
+                        direction = bug.pos - fruit.pos
+
+                        if direction.length() != 0:
+                            direction = direction.normalize()
+
+                        speed = bug.speed
+
+                        fruit.pos += direction * speed * dt
+
+
     def death():
         for bug in Bug.bugs:
             if not bug.alive:
+                print(bug.energy)
                 Bug.bugs.remove(bug)
 
     def getBug(id, debug = False):
@@ -288,5 +317,6 @@ class Bug():
     
     def MasterUpdate(dt, screen, debug):
         Bug.update(dt, screen)
+        Bug.grab_fruit(dt)
         Bug.update_attacks()
         Bug.draw(screen, draw_debug=debug)

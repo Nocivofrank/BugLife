@@ -13,17 +13,31 @@ class Tree:
         self.my_fruits = []
         self.energy = 5000
         self.pos = pygame.Vector2(pos)
-        self.been_attacked = False
+        self.quadrant = None
+        self.alive = True
 
         Tree.Trees.append(self)
     
-    def Update(dt, screen):
+    def Update(dt, screen, gameChunk):
         for tree in Tree.Trees:
-            tree.energy -= Tree.natural_energy_decay * dt
-            tree.energy += Tree.natural_energy_gain * dt
+            chunk = gameChunk.chunk_lists["fruit_chunks"]
 
-            if brain.Brain.random_range(0 , 1) > .99:
-                Tree.CreateFruit(tree)
+            density = len(chunk[tree.quadrant]) / 100
+
+            tree.energy += Tree.natural_energy_gain * dt
+            tree.energy -= Tree.natural_energy_decay * density * dt
+
+            if tree.quadrant is not None:
+                if brain.Brain.random_range(0 , 1) > .99:
+                    Tree.CreateFruit(tree)
+
+            if tree.energy <= 0:
+                tree.alive = False
+
+    def decay():
+        for tree in Tree.Trees:
+            if not tree.alive:
+                Tree.Trees.remove(tree)
 
     def CreateFruit(tree):
         Fruit((tree.pos.x + brain.Brain.random_range( -30 , 30), tree.pos.y + brain.Brain.random_range(-30 , 30)))
@@ -32,8 +46,9 @@ class Tree:
         for tree in Tree.Trees:
             pygame.draw.circle(screen, "darkgreen", tree.pos, Tree.size)
 
-    def MasterUpdate(dt, screen):
-        Tree.Update(dt, screen=screen)
+    def MasterUpdate(dt, screen, gameChunk):
+        Tree.decay()
+        Tree.Update(dt, screen=screen, gameChunk=gameChunk)
         Tree.Draw(screen=screen)
 
 class Fruit():
@@ -49,12 +64,19 @@ class Fruit():
         self.pos = pygame.Vector2(pos)
         Fruit.fruits.append(self)
 
-    def Update(dt):
+    def Update(dt, gameChunk):
         for fruit in Fruit.fruits:
             fruit.lifetime -= dt
             if fruit.lifetime <= 0 or not fruit.alive:
                 fruit.alive = False
                 fruit.energy = 0
+            else:
+                chunk = gameChunk.chunk_lists["fruit_chunks"]
+                if fruit.quadrant is not None:
+                    if (brain.Brain.random_range(0 , 1) / len(chunk[fruit.quadrant])) > .999:
+                        fruit.alive = False
+                        Tree(pos= (fruit.pos.x, fruit.pos.y))
+
 
     def decay():
         for fruit in Fruit.fruits:
@@ -65,6 +87,6 @@ class Fruit():
         for fruit in Fruit.fruits:
             pygame.draw.circle(screen, "green", fruit.pos, Fruit.size)
 
-    def MasterUpdate(dt, screen):
-        Fruit.Update(dt)
+    def MasterUpdate(dt, screen, gameChunk):
+        Fruit.Update(dt, gameChunk)
         Fruit.Draw(screen=screen)

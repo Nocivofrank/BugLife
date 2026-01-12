@@ -9,12 +9,18 @@ screen = py.display.set_mode((1280, 720), py.RESIZABLE, py.SRCALPHA)
 clock = py.time.Clock()
 dt = 0
 
-amount_bugs_create = 1000
-show_menu = True
+amount_bugs_create = 200
+amount_trees_create = 100
+global_size = 1
 
-skip_frames = 3
+bug.Bug.size *= global_size
+food.Fruit.size *= global_size
+food.Tree.size *= global_size
+
+skip_frames = 1
 skipped_frames = 0
 debug = False
+show_menu = True
 
 shared_info = {
     "running": True,
@@ -38,7 +44,7 @@ def Menu():
 
 threading.Thread(target=Menu , daemon=True).start()
 
-game_Chunk = ch.Chunks(screen.get_width(), screen.get_height(), 10)
+game_Chunk = ch.Chunks(screen.get_width(), screen.get_height(), 20)
 
 py.init()
 font = py.font.Font(None, 36)
@@ -64,10 +70,11 @@ while shared_info["running"]:
 
         game_Chunk.Update(bug.Bug.bugs, "bug_chunks")
         game_Chunk.Update(food.Fruit.fruits, "fruit_chunks")
+        game_Chunk.Update(food.Tree.Trees, "tree_chunks")
 
         bug.Bug.MasterUpdate(dt,screen, debug)
-        food.Tree.MasterUpdate(dt, screen)
-        food.Fruit.MasterUpdate(dt, screen)
+        food.Tree.MasterUpdate(dt, screen, game_Chunk)
+        food.Fruit.MasterUpdate(dt, screen, game_Chunk)
 
         if skipped_frames >= skip_frames:
             bug.Bug.update_detect(dt, game_Chunk)
@@ -75,19 +82,8 @@ while shared_info["running"]:
         else:
             skipped_frames += 1
 
-        if len(food.Tree.Trees) <= 100:
-            food.Tree(pos= (bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())))
-
-        if len(bug.Bug.bugs) <= 100:
-            if bug.Bug.bugs:
-                best_bug = 0
-                for i in range(len(bug.Bug.bugs)):
-                    if bug.Bug.bugs[i].time_alive > bug.Bug.bugs[best_bug].time_alive:
-                        best_bug = i
-
-                bug.Bug(1, pos= (bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())), brain= bug.Bug.bugs[best_bug].brain)
-            else:
-                bug.Bug(1, pos= (bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())))
+        if len(food.Tree.Trees) < amount_trees_create:
+            food.Tree(pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())))
 
     else:
         text = font.render(f"Loading...", True , (255, 255, 255))

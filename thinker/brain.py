@@ -11,7 +11,7 @@ class Brain():
             self.neuron_input,
             200,
             200,
-            8
+            9
         ]
 
         self.W = []
