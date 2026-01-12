@@ -47,19 +47,3 @@ class Chunks:
                     else:
                         continue
                     break
-# class quick:
-#     def __init__(self):
-#         self.pos = pygame.Vector2(1 ,10)
-#         self.quadrant = None
-
-# list = []
-# for i in range(1):
-#     list.append(quick())
-# chunk_lists = {
-#             "bug_chunks": [None] * 10,
-#             "fruit_chunks": [None] * 10
-#         }
-
-# print(len(chunk_lists))
-# for i in chunk_lists:
-#     print(i)
