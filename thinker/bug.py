@@ -297,7 +297,6 @@ class Bug():
 
                         fruit.pos += direction * speed * dt
 
-
     def death():
         for bug in Bug.bugs:
             if not bug.alive:

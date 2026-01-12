@@ -10,8 +10,7 @@ class Tree:
     natural_energy_gain = 5
 
     def __init__(self, pos = pygame.Vector2(100 , 100)):
-        self.my_fruits = []
-        self.energy = 5000
+        self.energy = 2000
         self.pos = pygame.Vector2(pos)
         self.quadrant = None
         self.alive = True
@@ -28,7 +27,7 @@ class Tree:
             tree.energy -= Tree.natural_energy_decay * density * dt
 
             if tree.quadrant is not None:
-                if brain.Brain.random_range(0 , 1) > .99:
+                if brain.Brain.random_range(0 , 1) > .999:
                     Tree.CreateFruit(tree)
 
             if tree.energy <= 0:
@@ -73,9 +72,10 @@ class Fruit():
             else:
                 chunk = gameChunk.chunk_lists["fruit_chunks"]
                 if fruit.quadrant is not None:
-                    if (brain.Brain.random_range(0 , 1) / len(chunk[fruit.quadrant])) > .999:
-                        fruit.alive = False
-                        Tree(pos= (fruit.pos.x, fruit.pos.y))
+                    if len(chunk[fruit.quadrant]) != 0:
+                        if (brain.Brain.random_range(0 , 1) / len(chunk[fruit.quadrant])) > .999:
+                            fruit.alive = False
+                            Tree(pos= (fruit.pos.x, fruit.pos.y))
 
 
     def decay():
