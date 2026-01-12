@@ -83,6 +83,8 @@ while shared_info["running"]:
 
         if len(food.Tree.Trees) < amount_trees_create:
             food.Tree(pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())))
+        if len(bug.Bug.bugs) < amount_bugs_create / 10:
+            bug.Bug( id = len(bug.Bug.bugs) ,pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())))
 
     else:
         text = font.render(f"Loading...", True , (255, 255, 255))
