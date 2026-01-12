@@ -27,7 +27,7 @@ class Tree:
             tree.energy -= Tree.natural_energy_decay * density * dt
 
             if tree.quadrant is not None:
-                if brain.Brain.random_range(0 , 1) > .999:
+                if brain.Brain.random_range(0 , 1) > .995:
                     Tree.CreateFruit(tree)
 
             if tree.energy <= 0:
