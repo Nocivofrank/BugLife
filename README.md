@@ -18,7 +18,7 @@ Clone the project
 
 ```bash
 git clone https://github.com/Nocivofrank/BugLife.git
-cd BugLife-main
+cd BugLife
 ```
 
 Install dependencies:
