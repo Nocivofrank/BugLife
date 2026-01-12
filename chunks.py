@@ -1,7 +1,5 @@
 import thinker.brain as brain
-import os, pygame
-
-os.system('cls')
+import pygame
 
 class Chunks:
     def __init__(self, width = 800, height = 600 , chunk_divide = 2):

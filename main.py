@@ -1,7 +1,6 @@
 import pygame as py
-import os, threading, chunks as ch, consumable.food as food, Menu.menu as menu
+import threading, chunks as ch, consumable.food as food, Menu.menu as menu
 import thinker.bug as bug
-os.system("cls ")
 
 lock = threading.Lock()
 
