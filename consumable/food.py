@@ -22,7 +22,7 @@ class Tree:
             tree.energy -= Tree.natural_energy_decay * dt
             tree.energy += Tree.natural_energy_gain * dt
 
-            if brain.Brain.random_range(0 , 1) > .9:
+            if brain.Brain.random_range(0 , 1) > .99:
                 Tree.CreateFruit(tree)
 
     def CreateFruit(tree):
@@ -32,6 +32,10 @@ class Tree:
         for tree in Tree.Trees:
             pygame.draw.circle(screen, "darkgreen", tree.pos, Tree.size)
 
+    def MasterUpdate(dt, screen):
+        Tree.Update(dt, screen=screen)
+        Tree.Draw(screen=screen)
+
 class Fruit():
     size = 1
 
@@ -39,20 +43,28 @@ class Fruit():
 
     def __init__(self, pos = pygame.Vector2(100 , 100)):
         self.energy = 500
-        self.lifetime = 1000
+        self.lifetime = 10000
         self.alive = True
+        self.quadrant = None
         self.pos = pygame.Vector2(pos)
         Fruit.fruits.append(self)
 
     def Update(dt):
         for fruit in Fruit.fruits:
             fruit.lifetime -= dt
+            if fruit.lifetime <= 0 or not fruit.alive:
+                fruit.alive = False
+                fruit.energy = 0
 
     def decay():
         for fruit in Fruit.fruits:
-            if fruit.lifetime <= 0 or not fruit.alive:
-                Fruit.fruits.remove(fruit)
+            if fruit.alive is False:
+                Fruit.fruits.remove(fruit)        
 
     def Draw(screen):
         for fruit in Fruit.fruits:
             pygame.draw.circle(screen, "green", fruit.pos, Fruit.size)
+
+    def MasterUpdate(dt, screen):
+        Fruit.Update(dt)
+        Fruit.Draw(screen=screen)

@@ -9,12 +9,8 @@ class Brain():
 
         self.hidden_size = [
             self.neuron_input,
-            10,
-            8,
-            6,
-            6,
-            6,
-            3,
+            200,
+            200,
             8
         ]
 
