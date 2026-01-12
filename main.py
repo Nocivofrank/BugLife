@@ -67,8 +67,6 @@ while shared_info["running"]:
         bug.Bug.death()
         food.Fruit.decay()
 
-        print(len(bug.Bug.bugs))
-
         game_Chunk.Update(bug.Bug.bugs, "bug_chunks")
         game_Chunk.Update(food.Fruit.fruits, "fruit_chunks")
         game_Chunk.Update(food.Tree.Trees, "tree_chunks")
