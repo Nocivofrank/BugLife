@@ -1,5 +1,5 @@
 # Bug/Ant Life Simulation
-Date: 1/2024
+
 
 ## Reasons for why / Technologies used
 
