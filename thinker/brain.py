@@ -3,7 +3,7 @@ import thinker.bug as bg
 import secrets
 
 class Brain():    
-    minimum_neuron_input = 24
+    minimum_neuron_input = 26
     def __init__(self, input_neuron_min_limit = 0):
         self.neuron_input = input_neuron_min_limit + Brain.minimum_neuron_input
 
@@ -83,6 +83,9 @@ class Brain():
         self.information[22] = bug.distance_to_sides[3]
         if bug.quadrant is not None:
             self.information[23] = bug.quadrant
+
+        self.information[24] = bug.brotein
+        self.information[25] = bug.frutein
 
         amount = Brain.minimum_neuron_input
 

@@ -21,7 +21,7 @@ class Tree:
         for tree in Tree.Trees:
             chunk = gameChunk.chunk_lists["fruit_chunks"]
 
-            density = len(chunk[tree.quadrant]) / 100
+            density = len(Tree.Trees) / 1000
 
             tree.energy += Tree.natural_energy_gain * dt
             tree.energy -= Tree.natural_energy_decay * density * dt

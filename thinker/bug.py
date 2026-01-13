@@ -24,6 +24,8 @@ class Bug():
         self.eat_cooldown_timer = 0
         self.quadrant = None
         self.grabed_fruit = False
+        self.brotein = 100
+        self.frutein = 100
 
         # Catalogs the nearest bug
         self.closest_other = [None] * Bug.amount_detect_max
@@ -144,6 +146,9 @@ class Bug():
                 bug.vel *= 0.85
                 bug.pos += bug.vel * dt
 
+                bug.brotein -= 10 * dt
+                bug.frutein -= 10 * dt
+
                 if wrap:
                     wrap_padding = 4
 
@@ -194,17 +199,18 @@ class Bug():
                     bug.speed = (out[4]) / (Bug.size * 1000)
 
                     #This is where the attack is being handled
-                    if out[5] > .8:
+                    if out[5] > .5:
                         bug.attacking = True
                         target = bug.very_closest_other
 
                         if target is not None and target.energy > 0:
                             distance = bug.pos.distance_to(target.pos)
                             if distance <= Bug.attack_range:
-                                damage = min(bug.attack, target.energy)
+                                damage = min(bug.attack * bug.speed, target.energy)
 
                                 target.energy -= damage
-                                bug.energy += damage
+                                bug.energy += damage / bug.brotein * .01
+                                bug.brotein += 10
 
                                 bug.amount_energy_gained += damage
                                 target.amount_energy_lost += damage
@@ -218,8 +224,9 @@ class Bug():
                         if target_fruit is not None and target_fruit.alive:
                             distance = bug.pos.distance_to(target_fruit.pos)
                             if distance <= Bug.attack_range:
-                                bug.energy += target_fruit.energy
+                                bug.energy += target_fruit.energy / bug.frutein * .01
                                 bug.eat_cooldown_timer = 0
+                                bug.frutein += 10
                                 target_fruit.alive = False
 
                     if out[7] > .5:
@@ -315,7 +322,7 @@ class Bug():
         return None
     
     def MasterUpdate(dt, screen, debug):
-        Bug.update(dt, screen)
+        Bug.update(dt, screen, wrap=False)
         Bug.grab_fruit(dt)
         Bug.update_attacks()
         Bug.draw(screen, draw_debug=debug)

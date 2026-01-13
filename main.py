@@ -8,9 +8,9 @@ screen = py.display.set_mode((1280, 720), py.RESIZABLE, py.SRCALPHA)
 clock = py.time.Clock()
 dt = 0
 
-amount_bugs_create = 200
+amount_bugs_create = 2000
 amount_trees_create = 100
-global_size = 1
+global_size = 2
 
 bug.Bug.size *= global_size
 food.Fruit.size *= global_size
@@ -36,10 +36,10 @@ def Menu():
     print("Done")
     shared_info["bugs_ready"] = True
     # menu.Menu()
-    while shared_info["running"]:
-        bug.Bug.think(dt=shared_info["dt"])
-    if show_menu:
-        shared_info["running"] = False
+    # while shared_info["running"]:
+        # bug.Bug.think(dt=shared_info["dt"])
+    # if show_menu:
+    #     shared_info["running"] = False
 
 threading.Thread(target=Menu , daemon=True).start()
 
@@ -75,6 +75,8 @@ while shared_info["running"]:
         food.Tree.MasterUpdate(dt, screen, game_Chunk)
         food.Fruit.MasterUpdate(dt, screen, game_Chunk)
 
+        bug.Bug.think(dt=shared_info["dt"])
+
         if skipped_frames >= skip_frames:
             bug.Bug.update_detect(dt, game_Chunk)
             skipped_frames = 0
@@ -92,5 +94,5 @@ while shared_info["running"]:
         screen.blit(text, (screen.get_width()/2 - 60, screen.get_height()/2 - 50))
         screen.blit(loaded_stat, (screen.get_width()/2 - 170, screen.get_height()/2 -20))
     py.display.flip()
-    dt = clock.tick(60)
+    dt = clock.tick()
 py.quit()
