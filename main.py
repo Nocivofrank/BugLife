@@ -85,7 +85,7 @@ while shared_info["running"]:
 
         best_bug_index = 0
         for i in range(len(bug.Bug.bugs)):
-            if bug.Bug.bugs[i].time_alive > bug.Bug.bugs[0].time_alive:
+            if bug.Bug.bugs[i].time_alive > bug.Bug.bugs[best_bug_index].time_alive:
                 best_bug_index = i
 
         if len(food.Tree.Trees) < amount_trees_create:
