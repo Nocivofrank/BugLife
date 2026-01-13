@@ -83,11 +83,18 @@ while shared_info["running"]:
         else:
             skipped_frames += 1
 
+        best_bug_index = 0
+        for i in range(len(bug.Bug.bugs)):
+            if bug.Bug.bugs[i].time_alive > bug.Bug.bugs[0].time_alive:
+                best_bug_index = i
+
         if len(food.Tree.Trees) < amount_trees_create:
             food.Tree(pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())))
         if len(bug.Bug.bugs) < amount_bugs_create / 10:
-            bug.Bug( id = len(bug.Bug.bugs) ,pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())), energy_passed=1000)
-
+            if len(bug.Bug.bugs) == 0:
+                bug.Bug( id = len(bug.Bug.bugs) ,pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())), energy_passed=1000)
+            else:
+                bug.Bug( id = len(bug.Bug.bugs) ,pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())), energy_passed=1000, brain= bug.Bug.bugs[best_bug_index].brain)
     else:
         text = font.render(f"Loading...", True , (255, 255, 255))
         loaded_stat = font.render(f" Amount bugs loaded: {shared_info['amount_bugs_loaded']}/{amount_bugs_create}", True, (255, 255, 255))
