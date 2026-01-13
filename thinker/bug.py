@@ -209,7 +209,10 @@ class Bug():
                                 damage = min(bug.attack * bug.speed, target.energy)
 
                                 target.energy -= damage
-                                bug.energy += damage / bug.brotein * .01
+                                if bug.brotein > 0:
+                                    bug.energy += damage / bug.brotein * .01
+                                else:
+                                    bug.energy += damage
                                 bug.brotein += 10
 
                                 bug.amount_energy_gained += damage
@@ -224,7 +227,10 @@ class Bug():
                         if target_fruit is not None and target_fruit.alive:
                             distance = bug.pos.distance_to(target_fruit.pos)
                             if distance <= Bug.attack_range:
-                                bug.energy += target_fruit.energy / bug.frutein * .01
+                                if bug.frutein > 0:
+                                    bug.energy += target_fruit.energy / bug.frutein * .01
+                                else:
+                                    bug.energy += target_fruit.energy
                                 bug.eat_cooldown_timer = 0
                                 bug.frutein += 10
                                 target_fruit.alive = False
