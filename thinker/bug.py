@@ -146,8 +146,8 @@ class Bug():
                 bug.vel *= 0.85
                 bug.pos += bug.vel * dt
 
-                bug.brotein -= 10 * dt
-                bug.frutein -= 10 * dt
+                bug.brotein -= 1 * dt
+                bug.frutein -= 1 * dt
 
                 if wrap:
                     wrap_padding = 4
@@ -176,7 +176,7 @@ class Bug():
                 for i in range(4):
                     if wrap is False:
                         if bug.distance_to_sides[i] < 10:
-                            bug.energy -= 10 * dt
+                            bug.energy -= 1 * dt
                             bug.edging = True
 
                 bug.time_alive += dt
