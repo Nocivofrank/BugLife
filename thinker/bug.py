@@ -228,7 +228,7 @@ class Bug():
                             distance = bug.pos.distance_to(target_fruit.pos)
                             if distance <= Bug.attack_range:
                                 if bug.frutein > 0:
-                                    bug.energy += target_fruit.energy / bug.frutein * .01
+                                    bug.energy += target_fruit.energy / bug.frutein * .1
                                 else:
                                     bug.energy += target_fruit.energy
                                 bug.eat_cooldown_timer = 0
