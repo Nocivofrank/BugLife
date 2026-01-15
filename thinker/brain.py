@@ -136,7 +136,7 @@ class Brain():
         
         return h, energy_consumed
 
-    def brainMutate(self, chance=0.5, super_chance=0.1, strength=0.5, super_strength=0.7, amount = 1):
+    def brainMutate(self, chance=0.01, super_chance=0.001, strength=0.5, super_strength=0.7, amount = 1):
         for i in range(amount):
             for W in self.W:
                 # Normal mutation mask
