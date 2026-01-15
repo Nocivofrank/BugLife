@@ -8,7 +8,7 @@ screen = py.display.set_mode((1280, 720), py.RESIZABLE, py.SRCALPHA)
 clock = py.time.Clock()
 dt = 0
 
-amount_bugs_create = 1000
+amount_bugs_create = 100
 amount_trees_create = 100
 global_size = 2
 
@@ -101,5 +101,5 @@ while shared_info["running"]:
         screen.blit(text, (screen.get_width()/2 - 60, screen.get_height()/2 - 50))
         screen.blit(loaded_stat, (screen.get_width()/2 - 170, screen.get_height()/2 -20))
     py.display.flip()
-    dt = clock.tick()
+    dt = clock.tick(60)
 py.quit()

@@ -26,6 +26,7 @@ class Bug():
         self.grabed_fruit = False
         self.brotein = 100
         self.frutein = 100
+        self.spontanous_death_chance = 0
 
         # Catalogs the nearest bug
         self.closest_other = [None] * Bug.amount_detect_max
@@ -47,6 +48,7 @@ class Bug():
         self.amount_energy_gained = 0
         self.willing_to_reproduce = False
         self.time_alive = 0
+        self.idle = 0
         self.edging = False
 
         self.attacking = False
@@ -146,8 +148,28 @@ class Bug():
                 bug.vel *= 0.85
                 bug.pos += bug.vel * dt
 
-                bug.brotein -= 1 * dt
-                bug.frutein -= 1 * dt
+                # Base death chance per second
+                base_death_rate = 0.02      # 2% per second
+                idle_multiplier = 0.05      # increases with idle time
+
+                if bug.vel.length_squared() < 0.01:
+                    bug.idle += dt  # still in milliseconds, keep for tracking
+
+                    # death_rate calculation stays the same (per second)
+                    death_rate = base_death_rate + (bug.idle * 0.001) * idle_multiplier  # scale idle ms → seconds
+
+                    # compute probability using dt in ms → scale to seconds
+                    prob = death_rate * (dt * 0.001)  # dt in seconds
+                    prob = min(prob, 1.0)  # clamp
+
+                    if Brain.Brain.random_range(0, 1) < prob:
+                        bug.alive = False
+
+                else:
+                    bug.idle = 0
+
+                bug.brotein = max(bug.brotein, 0)
+                bug.frutein = max(bug.frutein, 0)
 
                 if wrap:
                     wrap_padding = 4
@@ -196,7 +218,7 @@ class Bug():
                     #Bug Controls where they go
                     bug.direction.x = out[0] - out[1]
                     bug.direction.y = out[2] - out[3]
-                    bug.speed = ((out[4] + .1) * 3) / (Bug.size * 1000)
+                    bug.speed = ((out[4] + 2) * 3) / (Bug.size * 1000)
 
                     #This is where the attack is being handled
                     if out[5] > .5:

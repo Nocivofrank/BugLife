@@ -3,7 +3,7 @@ import thinker.bug as bg
 import secrets
 
 class Brain():    
-    minimum_neuron_input = 26
+    minimum_neuron_input = 27
     def __init__(self, input_neuron_min_limit = 0):
         self.neuron_input = input_neuron_min_limit + Brain.minimum_neuron_input
 
@@ -86,6 +86,7 @@ class Brain():
 
         self.information[24] = bug.brotein
         self.information[25] = bug.frutein
+        self.information[26] = bug.spontanous_death_chance
 
         amount = Brain.minimum_neuron_input
 
