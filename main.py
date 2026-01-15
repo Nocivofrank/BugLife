@@ -8,7 +8,7 @@ screen = py.display.set_mode((1280, 720), py.RESIZABLE, py.SRCALPHA)
 clock = py.time.Clock()
 dt = 0
 
-amount_bugs_create = 100
+amount_bugs_create = 2000
 amount_trees_create = 100
 global_size = 2
 
