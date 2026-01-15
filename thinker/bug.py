@@ -218,7 +218,7 @@ class Bug():
                     #Bug Controls where they go
                     bug.direction.x = out[0] - out[1]
                     bug.direction.y = out[2] - out[3]
-                    bug.speed = ((out[4] + 2) * 3) / (Bug.size * 1000)
+                    bug.speed = ((out[4] + 1) * 2) / (Bug.size * 1000)
 
                     #This is where the attack is being handled
                     if out[5] > .5:
