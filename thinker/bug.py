@@ -218,7 +218,7 @@ class Bug():
                     #Bug Controls where they go
                     bug.direction.x = out[0] - out[1]
                     bug.direction.y = out[2] - out[3]
-                    bug.speed = ((out[4] + 1) * 2) / (Bug.size * 1000)
+                    bug.speed = ((out[4] + .1)) / (Bug.size * 1000)
 
                     #This is where the attack is being handled
                     if out[5] > .5:
@@ -277,10 +277,9 @@ class Bug():
                                 target.energy -= 500
                                 dx = (bug.pos.x + target.pos.x) / 2
                                 dy = (bug.pos.y + target.pos.y) / 2
-                                if bug.time_alive > target.time_alive:
-                                    Bug(len(Bug.bugs), pos= (dx, dy), energy_passed= 500, brain=bug.brain)
-                                else:
-                                    Bug(len(Bug.bugs), pos= (dx, dy), energy_passed= 500, brain=target.brain)
+
+                                new_brain = Brain.Brain.mixBrain(bug.brain, target.brain)
+                                Bug(len(Bug.bugs), pos= (dx, dy), energy_passed= 500, brain=new_brain)
                     else:
                         bug.willing_to_reproduce = False
                 else:

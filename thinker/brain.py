@@ -153,5 +153,16 @@ class Brain():
                 mutation_super = np.random.uniform(-super_strength, super_strength, W.shape)
                 W += super_mask * mutation_super
 
+    def mixBrain(first_brain, second_brain, W):
+        newBrain = Brain()
+        W = []
+        for i in range(len(first_brain.W)):
+            if Brain.random_range(0, 1) >= .5:
+                W.append(second_brain.W[i])
+            else:
+                W.append(first_brain.W[i])
+        newBrain.setWeights(W)
+        return newBrain
+
     def random_range(a, b):
         return a + (b - a) * (secrets.randbits(52) / (1 << 52))
