@@ -8,7 +8,7 @@ screen = py.display.set_mode((1280, 720), py.RESIZABLE, py.SRCALPHA)
 clock = py.time.Clock()
 dt = 0
 
-amount_bugs_create = 2000
+amount_bugs_create = 500
 amount_trees_create = 100
 global_size = 2
 
@@ -94,7 +94,7 @@ while shared_info["running"]:
             if len(bug.Bug.bugs) == 0:
                 bug.Bug( id = len(bug.Bug.bugs) ,pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())), energy_passed=1000)
             else:
-                bug.Bug( id = len(bug.Bug.bugs) ,pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())), energy_passed=1000, brain= bug.Bug.bugs[best_bug_index].brain)
+                bug.Bug( id = len(bug.Bug.bugs) ,pos=(bug.Brain.Brain.random_range( 0 , screen.get_width()) , bug.Brain.Brain.random_range( 0 , screen.get_height())), energy_passed=1000, brain= bug.Bug.bugs[best_bug_index].brain.clone())
     else:
         text = font.render(f"Loading...", True , (255, 255, 255))
         loaded_stat = font.render(f" Amount bugs loaded: {shared_info['amount_bugs_loaded']}/{amount_bugs_create}", True, (255, 255, 255))

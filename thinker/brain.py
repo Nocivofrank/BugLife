@@ -164,5 +164,17 @@ class Brain():
         newBrain.setWeights(W)
         return newBrain
 
+    def clone(self):
+        new_brain = Brain()
+
+        new_brain.neuron_input = self.neuron_input
+
+        new_brain.W = [w.copy() for w in self.W]
+        new_brain.B = [b.copy() for b in self.B]
+
+        new_brain.information = self.information.copy()
+
+        return new_brain
+    
     def random_range(a, b):
         return a + (b - a) * (secrets.randbits(52) / (1 << 52))
